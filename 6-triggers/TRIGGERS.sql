@@ -4,21 +4,30 @@
 USE coworking;
 -- MÓDULO MEMBRESÍAS
 -- 1. Insertar fecha de vencimiento automáticamente
+DROP TRIGGER IF EXISTS trg_mem_calc_vencimiento;
 DELIMITER //
 CREATE TRIGGER trg_mem_calc_vencimiento BEFORE INSERT ON membresia_usuario
-FOR EACH ROW BEGIN
-    DECLARE v_nombre_tipo VARCHAR(30);
-    -- Buscamos el nombre del tipo de membresía según el id que viene en NEW
-    SELECT nombre INTO v_nombre_tipo
-    FROM membresia_usuario mu
-    WHERE tipo_membresia_id = NEW.tipo_membresia_id;
-    -- Según el tipo, calculamos la fecha_fin
-    IF v_nombre_tipo = 'Diaria' THEN
-        SET NEW.fecha_fin = NEW.fecha_inicio;
-    ELSEIF v_nombre_tipo = 'Mensual' THEN
-        SET NEW.fecha_fin = DATE_ADD(NEW.fecha_inicio, INTERVAL 1 MONTH);
-    ELSEIF v_nombre_tipo = 'Anual' THEN
-        SET NEW.fecha_fin = DATE_ADD(NEW.fecha_inicio, INTERVAL 1 YEAR);
+FOR EACH ROW 
+BEGIN
+    DECLARE v_duracion INT;
+    SELECT duracion_dias INTO v_duracion
+    FROM tipos_membresia
+    WHERE id = NEW.tipo_membresia_id;
+    
+    IF v_duracion IS NOT NULL THEN
+          SET NEW.fecha_fin = DATE_ADD(NEW.fecha_inicio, INTERVAL v_duracion DAY);
+    END IF;
+END //
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS trg_mem_audit_update;
+DELIMITER //
+CREATE TRIGGER trg_mem_audit_update AFTER INSERT ON membresia_usuario
+FOR EACH ROW
+BEGIN
+    IF OLD.estado != NEW.estado OR OLD.tipo_membresia_id != NEW.tipo_membresia_id THEN
+        INSERT INTO log_membresias (id, membresia_usuario_id, usuario_id, tipo_anterior_id, tipo_nuevo_id, accion, estado_anterior, estado_nuevo, precio_anterior, precio_nuevo, fecha_inicio_anterior, fecha_inicio_nueva, fecha_fin_anterior, fecha_fin_nueva)
+        VALUES (UUID(), NEW.id, NEW.usuario_id, OLD.tipo_membresia_id, NEW.tipo_membresia_id, 'CAMBIO_ESTADO', OLD.estado, NEW.estado, OLD.precio_pagado, NEW.precio_pagado, OLD.fecha_inicio, NEW.fecha_inicio, OLD.fecha_fin, NEW.fecha_fin);
     END IF;
 END //
 DELIMITER ;
