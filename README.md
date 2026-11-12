@@ -1,3 +1,31 @@
+<div align="center">
+
+# 🏢 Sistema de Gestión de Coworking
+### Membresías · Reservas · Finanzas · Control de acceso
+
+**Modelo de datos relacional y automatización operativa para una red de espacios de trabajo compartido.**
+
+![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-Relational%20Database-4479A1?style=for-the-badge)
+![Documentation](https://img.shields.io/badge/Docs-DDL%20%7C%20DML%20%7C%20Procedures-137C78?style=for-the-badge)
+
+</div>
+
+## Project overview
+
+Este repositorio reúne el diseño y los scripts SQL de una base de datos para gestionar clientes, membresías, espacios, reservas, servicios, facturación, pagos y accesos. La documentación se organiza por etapas: estructura, datos, consultas, procedimientos, funciones, triggers, eventos y seguridad.
+
+| Área | Contenido documentado |
+|---|---|
+| Modelo relacional | DDL, tablas, restricciones e índices |
+| Datos y consultas | Datos semilla y consultas SQL |
+| Automatización | Funciones, procedimientos, triggers y eventos |
+| Seguridad | Roles, privilegios y vistas de acceso |
+
+**Navegación:** [Descripción](#-1-descripción-del-proyecto) · [Requisitos](#-2-requisitos-del-sistema) · [Instalación](#️-3-instalación-y-configuración) · [Modelo de datos](#️-4-estructura-de-la-base-de-datos)
+
+---
+
 # 🏢 Sistema de Gestión de Coworking
 
 Bienvenido al repositorio oficial del **Sistema de Gestión de Coworking**. Este sistema implementa una base de datos robusta, relacional y altamente automatizada en MySQL para administrar la operación diaria, el control de acceso físico y las finanzas de una red de espacios de trabajo compartido.
